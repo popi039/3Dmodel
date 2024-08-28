@@ -63,25 +63,25 @@ gltfLoader.load('nice.glb', function (gltf) {
 
     scene.add(model);
 
-    gltf.animations.forEach(function (clip) {
-        const mixer = new THREE.AnimationMixer(model);
-        const action = mixer.clipAction(clip);
-        mixers.push(mixer);
+gltf.animations.forEach(function (clip) {
+    const mixer = new THREE.AnimationMixer(model);
+    const action = mixer.clipAction(clip);
+    mixers.push(mixer);
 
-        if (clip.name === '[保留アクション].001') {
-            currentAction1 = action;
-            action.loop = THREE.LoopOnce;
-            action.clampWhenFinished = true;
-        } else if (clip.name === '[保留アクション]') {
-            currentAction2 = action;
-            action.loop = THREE.LoopRepeat; // 常に再生
-            action.play();
-        } else if (clip.name === 'see2') { // 'see2'に変更
-            action.loop = THREE.LoopRepeat; // 常に再生
-            action.timeScale = 0.3; // 速度を0.3倍に設定
-            action.play();
-        }
-    });
+    if (clip.name === '[保留アクション].001') {
+        currentAction1 = action;
+        action.loop = THREE.LoopOnce;
+        action.clampWhenFinished = true;
+    } else if (clip.name === '[保留アクション]') {
+        currentAction2 = action;
+        action.loop = THREE.LoopRepeat; // 常に再生
+        action.play();
+    } else if (clip.name === 'see2') { // 'see2'に変更
+        action.loop = THREE.LoopRepeat; // 常に再生
+        action.timeScale = 0.3; // 速度を0.3倍に設定
+        action.play();
+    }
+});
 }, undefined, function (error) {
     console.error('An error happened:', error);
 });
@@ -107,6 +107,8 @@ recognition.onstart = () => {
 recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
     console.log(`音声認識の結果: ${transcript}`);
+
+    // 音声認識でのアニメーションのトリガーは不要なので削除
 };
 
 recognition.onerror = (event) => {
@@ -147,7 +149,7 @@ stopButton.addEventListener('click', () => {
 function triggerNodAnimation() {
     if (currentAction1) {
         currentAction1.reset();
-        currentAction1.timeScale = 1; // 適切な速度に設定
+        currentAction1.timeScale = 5;
         currentAction1.play();
         console.log('アニメーションがトリガーされました');
     }
